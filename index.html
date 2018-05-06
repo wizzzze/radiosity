@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Lightmap</title>
+		<style>
+		body{
+			margin: 0;
+			padding: 0;
+			overflow: hidden;
+		}
+		</style>
+	</head>
+	<body>
+		
+	</body>
+
+
+    <script src="./three.js"></script>
+  	<script src="gi.js"></script>
+    <script src="./GLTFExporter.js"></script>
+    <script src="./OrbitControls.js"></script>
+    <script src="./UV2.js"></script>
+    <script src="./Unit.js"></script>
+    <script src="./ShaderLib.js"></script>
+
+    <script>
+    	var camera, scene, renderer;
+		renderer = new THREE.WebGLRenderer();
+		renderer.setPixelRatio( window.devicePixelRatio );
+		renderer.setSize( window.innerWidth, window.innerHeight );
+		renderer.shadowMap.enabled = true;
+		renderer.shadowMap.type = THREE.PCFSoftShadowMap; // default THREE.PCFShadowMap
+		var clearColor = new THREE.Color(0, 0, 0);
+		renderer.setClearColor(clearColor);
+
+		document.body.appendChild( renderer.domElement );
+
+
+		camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 2000 );
+		// camera.position.x = 5;
+		// camera.position.y = 5;
+		camera.position.z = 5;
+		camera.lookAt(0,0,0);
+
+		controls = new THREE.OrbitControls( camera );
+
+		var loader = new THREE.ObjectLoader();
+		var gi;
+		loader.load("./scene.json", function ( obj ) {
+		 	scene = obj;
+		 	scene.background = new THREE.Color(1, 1, 1);
+			// animate();
+			gi = new GI(scene, renderer, camera);
+		} );
+
+
+
+		function animate() {
+			requestAnimationFrame( animate );
+
+			render();
+		}
+
+		function render() {
+			renderer.render( scene, camera );
+		}
+
+		function exportScene(){
+			var gltfExporter = new THREE.GLTFExporter();
+
+			var link = document.createElement( 'a' );
+			link.download = 'scene.gltf';
+
+			gltfExporter.parse( scene, function( result ) {
+				var output = JSON.stringify( result, null, 2 );
+				var blob = new Blob( [ output ], { type: 'text/plain' } );
+				link.href = URL.createObjectURL( blob );
+				
+				link.click();
+				
+			}, {} );
+		}
+
+		function exportObj(){
+			var exporter = new THREE.OBJExporter();
+			var result = exporter.parse( scene.scene );
+
+			save( new Blob( [ result ], { type: 'text/plain' } ), 'scene.obj' );
+		}
+
+		function save(blob, filename){
+			var link = document.createElement('a');
+			link.href = URL.createObjectURL( blob );
+			link.download = filename;
+			link.click();
+		}
+    </script>
+
+</html>
