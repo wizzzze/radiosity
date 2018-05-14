@@ -22,6 +22,7 @@
     <script src="./UV2.js"></script>
     <script src="./Unit.js"></script>
     <script src="./ShaderLib.js"></script>
+    <!-- <script src="./BufferSubdivisionModifier.js"></script> -->
 
     <script>
     	var camera, scene, renderer;
@@ -36,7 +37,7 @@
 		document.body.appendChild( renderer.domElement );
 
 
-		camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 2000 );
+		camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 0.01, 2000 );
 		// camera.position.x = 5;
 		// camera.position.y = 5;
 		camera.position.z = 5;
@@ -50,7 +51,8 @@
 		 	scene = obj;
 		 	scene.background = new THREE.Color(1, 1, 1);
 			// animate();
-			gi = new GI(scene, renderer, camera);
+			render();
+			gi = new Radiosity(scene, renderer, camera);
 		} );
 
 

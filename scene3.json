@@ -6,17 +6,6 @@
 	},
 	"geometries": [
 		{
-			"uuid": "39E2044C-A79C-4625-BCDF-B0B9F751E091",
-			"type": "SphereBufferGeometry",
-			"radius": 0.3,
-			"widthSegments": 32,
-			"heightSegments": 32,
-			"phiStart": 0,
-			"phiLength": 6.283185,
-			"thetaStart": 0,
-			"thetaLength": 3.141593
-		},
-		{
 			"uuid": "CF610674-6E85-4E2C-A782-BF34F8730F0D",
 			"type": "PlaneBufferGeometry",
 			"width": 0.4,
@@ -57,20 +46,20 @@
 			"heightSegments": 1
 		},
 		{
-			"uuid": "FA522DDE-DE1A-4FE7-A150-7F5B9956E7DA",
+			"uuid": "192E8D74-6BBC-4E77-8356-ED04CFF9A8A2",
 			"type": "PlaneBufferGeometry",
 			"width": 2,
 			"height": 2,
-			"widthSegments": 64,
-			"heightSegments": 64
+			"widthSegments": 1,
+			"heightSegments": 1
 		},
 		{
-			"uuid": "828EB4B2-8996-491F-A743-5295658AF73D",
+			"uuid": "6D59C9D2-F3A8-42B3-A26A-D114403B58C5",
 			"type": "PlaneBufferGeometry",
 			"width": 2,
 			"height": 2,
-			"widthSegments": 32,
-			"heightSegments": 32
+			"widthSegments": 1,
+			"heightSegments": 1
 		},
 		{
 			"uuid": "BCF63F49-07DF-47E6-9309-A8B6139D944C",
@@ -89,25 +78,14 @@
 			"heightSegments": 32
 		},
 		{
-			"uuid": "45081482-0141-437B-A683-A74774513C88",
+			"uuid": "43E1BD1C-9344-4307-8223-D82AC598E9BB",
 			"type": "PlaneBufferGeometry",
 			"width": 2,
 			"height": 2,
-			"widthSegments": 32,
-			"heightSegments": 32
+			"widthSegments": 1,
+			"heightSegments": 1
 		}],
 	"materials": [
-		{
-			"uuid": "8AA4885A-F1EF-455A-B952-B8F929620AB3",
-			"type": "MeshStandardMaterial",
-			"color": 16777215,
-			"roughness": 1,
-			"metalness": 0.5,
-			"emissive": 0,
-			"depthFunc": 3,
-			"depthTest": true,
-			"depthWrite": true
-		},
 		{
 			"uuid": "21FAE2EB-8433-456B-9E86-17F0D0E05301",
 			"type": "MeshStandardMaterial",
@@ -224,14 +202,6 @@
 		"matrix": [1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1],
 		"children": [
 			{
-				"uuid": "CFB714B2-3494-4D2A-B7B0-EDF464D697BB",
-				"type": "Mesh",
-				"name": "Sphere",
-				"matrix": [1,0,0,0,0,1,0,0,0,0,1,0,0.5,-0.7,0,1],
-				"geometry": "39E2044C-A79C-4625-BCDF-B0B9F751E091",
-				"material": "8AA4885A-F1EF-455A-B952-B8F929620AB3"
-			},
-			{
 				"uuid": "20186F4A-4762-48AA-B1D2-FFB7C8AB6232",
 				"type": "HemisphereLight",
 				"name": "HemisphereLight",
@@ -309,7 +279,7 @@
 				"type": "Mesh",
 				"name": "Plane",
 				"matrix": [1,0,0,0,0,0,-1,0,0,1,0,0,0,-1,0,1],
-				"geometry": "FA522DDE-DE1A-4FE7-A150-7F5B9956E7DA",
+				"geometry": "192E8D74-6BBC-4E77-8356-ED04CFF9A8A2",
 				"material": "6576174D-25CA-4564-A1E4-5C2ABB33A527"
 			},
 			{
@@ -317,7 +287,7 @@
 				"type": "Mesh",
 				"name": "Plane",
 				"matrix": [0,0,-1,0,0,1,0,0,1,0,0,0,-1,0,0,1],
-				"geometry": "828EB4B2-8996-491F-A743-5295658AF73D",
+				"geometry": "6D59C9D2-F3A8-42B3-A26A-D114403B58C5",
 				"material": "CC713AA8-C971-4F4F-B78C-7BEFCE1B9AB7"
 			},
 			{
@@ -341,7 +311,7 @@
 				"type": "Mesh",
 				"name": "Plane",
 				"matrix": [0,0,1,0,0,1,0,0,-1,0,0,0,1,0,0,1],
-				"geometry": "45081482-0141-437B-A683-A74774513C88",
+				"geometry": "43E1BD1C-9344-4307-8223-D82AC598E9BB",
 				"material": "61437F40-ED54-4EE2-945D-A15350906CCB"
 			}],
 		"background": 11184810

@@ -1,5 +1,4 @@
 var GI = function(scene , renderer ,viewCamera){
-	var patchThreshold = 0.1;
 	
 	var SIZE = 32;
 	var SIZE2 = SIZE * SIZE;
@@ -39,10 +38,6 @@ var GI = function(scene , renderer ,viewCamera){
 
 			var geometry = processGeometry(object);
 			var material = getMaterial(object.material);
-			if(i == 1){
-				console.log(geometry);
-				throw 123;
-			}
 			
 			// object.material = getMaterial(object.material);
 			// object.material.vertexColors = THREE.VertexColors;
@@ -102,110 +97,94 @@ var GI = function(scene , renderer ,viewCamera){
 		var newNormals = [];
 		var newUvs = [];
 
-		var indexOffset = positions.length / 3 - 1;
+		var positionLength = positions.length / 3;
 
-		// var pos1 = new THREE.Vector3();
-		// var pos2 = new THREE.Vector3();
-		// var pos3 = new THREE.Vector3();
+		var pos1 = new THREE.Vector3();
+		var pos2 = new THREE.Vector3();
+		var pos3 = new THREE.Vector3();
 
-		var pos = new Float32Array(9);
+		var nor1 = new THREE.Vector3();
+		var nor2 = new THREE.Vector3();
+		var nor3 = new THREE.Vector3();
 
-		// var nor1 = new THREE.Vector3();
-		// var nor2 = new THREE.Vector3();
-		// var nor3 = new THREE.Vector3();
+		var uv1 = new THREE.Vector2();
+		var uv2 = new THREE.Vector2();
+		var uv3 = new THREE.Vector2();
 
-		var nor = new Float32Array(9);
-
-		// var uv1 = new THREE.Vector2();
-		// var uv2 = new THREE.Vector2();
-		// var uv3 = new THREE.Vector2();
-
-		var uv = new Float32Array(6);
-
+		var offset1,offset2,offset3;
 		var areaWeight;
 
 		var edge1 = new THREE.Vector3();
 		var edge2 = new THREE.Vector3();
 
+		var newIndex = [];
 
 		if(index){
-			for(var n = 0; n < index.length / 3; n++){
-				var m = n * 3;
+			// var length = ;
+			var m = 0;
+			// for(var n = 0; n < index.length / 3; n++){
+			while(index[m] !== undefined){
+				// var m = n * 3;
+				pos1.fromArray( positions, index[m] * 3 );
+				pos2.fromArray( positions, index[m+1] * 3 );
+				pos3.fromArray( positions, index[m+2] * 3 );
 
-				pos[0] = positions[index[m] * 3];		pos[1] = positions[index[m] * 3 + 1];		pos[2] = positions[index[m] * 3 + 2];
-				pos[3] = positions[index[m + 1] * 3];	pos[4] = positions[index[m + 1] * 3 + 1];	pos[5] = positions[index[m + 1] * 3 + 2];
-				pos[6] = positions[index[m + 2] * 3];	pos[7] = positions[index[m + 2] * 3 + 1];	pos[8] = positions[index[m + 2] * 3 + 2];
+				nor1.fromArray( normals, index[m] * 3 );
+				nor2.fromArray( normals, index[m+1] * 3 );
+				nor3.fromArray( normals, index[m+2] * 3 );
 
-				// pos1.fromArray( positions, index[m] * 3 );
-				// pos2.fromArray( positions, index[m+1] * 3 );
-				// pos3.fromArray( positions, index[m+2] * 3 );
+				uv1.fromArray( uvs, index[m] * 2 );
+				uv2.fromArray( uvs, index[m+1] * 2 );
+				uv3.fromArray( uvs, index[m+2] * 2 );
 
-				// nor1.fromArray( normals, index[m] * 3 );
-				// nor2.fromArray( normals, index[m+1] * 3 );
-				// nor3.fromArray( normals, index[m+2] * 3 );
-
-
-				nor[0] = normals[index[m] * 3];		nor[1] = normals[index[m] * 3 + 1];		nor[2] = normals[index[m] * 3 + 2];
-				nor[3] = normals[index[m + 1] * 3];	nor[4] = normals[index[m + 1] * 3 + 1];	nor[5] = normals[index[m + 1] * 3 + 2];
-				nor[6] = normals[index[m + 2] * 3];	nor[7] = normals[index[m + 2] * 3 + 1];	nor[8] = normals[index[m + 2] * 3 + 2];
-
-				// uv1.fromArray( uvs, index[m] * 2 );
-				// uv2.fromArray( uvs, index[m+1] * 2 );
-				// uv3.fromArray( uvs, index[m+2] * 2 );
-
-
-				uv[0] = uvs[index[m] * 2];		uv[1] = uvs[index[m] * 2 + 1];
-				uv[2] = uvs[index[m + 1] * 2];	uv[3] = uvs[index[m + 1] * 2 + 1];
-				uv[4] = uvs[index[m + 2] * 2];	uv[5] = uvs[index[m + 2] * 2 + 1];
-
-				edge1.set(pos[3] - pos[0], pos[4] - pos[1], pos[5] - pos[2]);
-				edge2.set(pos[6] - pos[0], pos[7] - pos[1], pos[8] - pos[2]);
+				edge1 = edge1.subVectors(pos2, pos1);
+				edge2 = edge2.subVectors(pos3, pos1);
+				edge2 = edge2.subVectors(pos3, pos1);
 
 				areaWeight = edge1.cross(edge2).length();
+
 				areaWeight *= object.scale.x * object.scale.y * object.scale.z;
 
 
-				if(areaWeight > patchThreshold){
 
-					// var vertices = splitTris(
-					// 	[
+				if(areaWeight > 0.01){
 
-					// 		{
-					// 			vertex1:{
-					// 				position : pos1, normal : nor1, uv : uv1, index : index[m],
-					// 			},
-					// 			vertex2:{
-					// 				position : pos2, normal : nor2, uv : uv2, index : index[m+1],
-					// 			},
-					// 			vertex3:{
-					// 				position : pos3, normal : nor3, uv : uv3, index : index[m+2],
-					// 			}
-					// 		}
-					// 	],areaWeight, indexOffset);
+					var n = 1;
+					var m = pow(2, n);
 
-					var vertices = splitTris(
-						[
-							{
-								positions : pos, normal : nor, uv : uv, index : new Uint16Array([index[m], index[m + 1], index[m + 2]]);
-							}
-						],areaWeight, indexOffset);
-
+					while(areaWeight / m > 0.01){
+						n++;
+						m = pow(2, n);
+					}
 
 					
-					for(var i  = 0; i < vertices.vertices.length; i++){
-						positions.push(vertices.vertices[i].position.x, vertices.vertices[i].position.y, vertices.vertices[i].position.z);
-						normals.push(vertices.vertices[i].normal.x, vertices.vertices[i].normal.y, vertices.vertices[i].normal.z);
-						uvs.push(vertices.vertices[i].uv.x, vertices.vertices[i].uv.y);
-					}
 
-					for(var j = 0; j < vertices.triangles.length; j ++){
-						index.push(vertices.triangles[j].vertex1.index, vertices.triangles[j].vertex2.index, vertices.triangles[j].vertex3.index);
-					}
+					var vertex = splitTri({
+						position : pos1, normal : nor1, uv : uv1, index : index[m],
+					},
+					{
+						position : pos2, normal : nor2, uv : uv2, index : index[m+1],
+					},
+					{
+						position : pos3, normal : nor3, uv : uv3, index : index[m+2],
+					});
+					
+					positions.push(vertex.position.x, vertex.position.y, vertex.position.z);
+					normals.push(vertex.normal.x, vertex.normal.y, vertex.normal.z);
+					uvs.push(vertex.uv.x, vertex.uv.y);
+
+					var positionIndex = positions.length / 3;
+
+					var i1 = index[m];
+					var i2 = index[m+1];
+					var i3 = index[m+2];
+
 
 					delete index[m];
 					delete index[m+1];
 					delete index[m+2];
 				}
+				m += 3;
 			}
 		}
 
@@ -225,91 +204,28 @@ var GI = function(scene , renderer ,viewCamera){
 		geometry.addAttribute( 'uv', new THREE.BufferAttribute( new Float32Array( uvs ), 2 ) );
 
 		geometry.setIndex(new THREE.BufferAttribute( indices, 1 ));
-		// console.log(geometry);
 
 		return geometry;
 	}
 
-	function splitTris(tris, weight, indexOffset){
 
-		var newVertices = [];
-		var newTriangles = [];
-		for(var i = 0; i < tris.length; i++){
-			var tri = tris[i];
-
-			indexOffset++;
-			var newVertex = genNewVertex(tri, indexOffset);
-
-			var newWeight = weight / 2;
-
-			
-			newVertices.push(newVertex);
-
-			if(newWeight > patchThreshold){
-			// if(false){
-
-				var newTris = [
-					{
-						vertex1 : newVertex,
-						vertex2 : tri.vertex1,
-						vertex3 : tri.vertex2,
-					},
-					{
-						vertex1 : tri.vertex1,
-						vertex2 : newVertex,
-						vertex3 : tri.vertex3,
-					}
-				];
-				var result = splitTris(newTris, newWeight, indexOffset);
-
-				for(var n = 0; n < result.vertices.length; n ++){
-					newVertices.push(result.vertices[n]);
-				}
-				for(var m = 0; m < result.triangles.length; m ++){
-					newTriangles.push(result.triangles[m]);
-				}
-				indexOffset = result.indexOffset;
-			}else{
-				newTriangles = [
-					{
-						vertex1 : newVertex,
-						vertex2 : tri.vertex1,
-						vertex3 : tri.vertex2,
-					},
-					{
-						vertex1 : tri.vertex1,
-						vertex2 : newVertex,
-						vertex3 : tri.vertex3,
-					}
-				];
-			}
-		
-		}
-
-		return {
-			vertices: newVertices,
-			triangles : newTriangles,
-			indexOffset : indexOffset,
-		};
-	}
-
-
-	function genNewVertex(tri, indexOffset){
+	function splitTri(vertex1, vertex2, vertex3){
+	
 		var newPosition = new THREE.Vector3(
-			( tri.vertex2.position.x + tri.vertex3.position.x ) / 2,
-			( tri.vertex2.position.y + tri.vertex3.position.y ) / 2,
-			( tri.vertex2.position.z + tri.vertex3.position.z ) / 2
+			( vertex2.position.x + vertex3.position.x ) / 2,
+			( vertex2.position.y + vertex3.position.y ) / 2,
+			( vertex2.position.z + vertex3.position.z ) / 2,
 		);
 
-		var newNormal = new THREE.Vector3((tri.vertex2.normal.x + tri.vertex3.normal.x) / 2, (tri.vertex2.normal.y + tri.vertex3.normal.y) / 2, (tri.vertex2.normal.z + tri.vertex3.normal.z) / 2).normalize();
-		var newUv = new THREE.Vector2( (tri.vertex2.uv.x + tri.vertex3.uv.x) / 2, (tri.vertex2.uv.y + tri.vertex3.uv.y) /2 );
-
-		var newIndex = indexOffset;
-
+		var newNormal = new THREE.Vector3((vertex2.normal.x + vertex3.normal.x) / 2, (vertex2.normal.y + vertex3.normal.y) / 2, (vertex2.normal.z + vertex3.normal.z) / 2).normalize();
+		var newUv = new THREE.Vector2( (vertex2.uv.x + vertex3.uv.x) / 2, (vertex2.uv.y + vertex3.uv.y) /2 );
+		
 		return {
-				position : newPosition, normal : newNormal, uv : newUv, index : newIndex,
-			};
-
+			position : newPosition,
+			normal : newNormal,
+			uv : newUv,
+		}
+		
 	}
 
 	

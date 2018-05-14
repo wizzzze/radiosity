@@ -1,0 +1,43 @@
+{
+	"metadata": {
+		"version": 4.5,
+		"type": "Object",
+		"generator": "Object3D.toJSON"
+	},
+	"geometries": [
+		{
+			"uuid": "4A769683-63C4-403C-BC23-64B856627663",
+			"type": "PlaneBufferGeometry",
+			"width": 100,
+			"height": 100,
+			"widthSegments": 1,
+			"heightSegments": 1
+		}],
+	"materials": [
+		{
+			"uuid": "5B07F8AA-3CE0-4EA8-80BB-BABBAC3964C7",
+			"type": "MeshStandardMaterial",
+			"color": 16777215,
+			"roughness": 0.5,
+			"metalness": 0.5,
+			"emissive": 0,
+			"depthFunc": 3,
+			"depthTest": true,
+			"depthWrite": true
+		}],
+	"object": {
+		"uuid": "D6E91BF8-EA04-4BA2-8A75-885A9C609710",
+		"type": "Scene",
+		"matrix": [1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1],
+		"children": [
+			{
+				"uuid": "4B5D906C-9FDC-4276-99D0-971DE82F4E9F",
+				"type": "Mesh",
+				"name": "Plane",
+				"matrix": [1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1],
+				"geometry": "4A769683-63C4-403C-BC23-64B856627663",
+				"material": "5B07F8AA-3CE0-4EA8-80BB-BABBAC3964C7"
+			}],
+		"background": 11184810
+	}
+}
